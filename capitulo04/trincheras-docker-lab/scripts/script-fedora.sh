@@ -24,9 +24,6 @@ dnf install gnupg -y
 # Proporciona información sobre la distribución de Linux instalada.
 dnf install lsb-release -y
 
-# Proporciona una visualización interactiva en tiempo real del uso del sistema, incluyendo la utilización de CPU, memoria y procesos activos.
-dnf install htop -y
-
 # Conjunto de herramientas de red como ifconfig y netstat.
 dnf install net-tools -y
 

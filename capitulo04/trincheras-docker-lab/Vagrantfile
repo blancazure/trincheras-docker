@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
     for nPuerto in 50100..50120
       ubuntu.vm.network "forwarded_port", guest: nPuerto, host: nPuerto
     end
-    ubuntu.vm.provision "shell", path: "./paquetes/apt-get-ubuntu.sh"
+    ubuntu.vm.provision "shell", path: "./scripts/script-ubuntu.sh"
     ubuntu.vm.provision "shell", inline: $git_trincheras_docker
     ubuntu.vm.provider "virtualbox" do |v|
       v.name = "vm-lab-docker-ubuntu"
@@ -41,7 +41,7 @@ Vagrant.configure("2") do |config|
     for nPuerto in 50200..50220
       fedora.vm.network "forwarded_port", guest: nPuerto, host: nPuerto
     end
-    fedora.vm.provision "shell", path: "./paquetes/dnf-fedora.sh"
+    fedora.vm.provision "shell", path: "./scripts/script-fedora.sh"
     fedora.vm.provision "shell", inline: $git_trincheras_docker
     fedora.vm.provider "virtualbox" do |v|
       v.name = "vm-lab-docker-fedora"
@@ -57,7 +57,7 @@ Vagrant.configure("2") do |config|
     for nPuerto in 50300..50320
       debian.vm.network "forwarded_port", guest: nPuerto, host: nPuerto
     end
-    debian.vm.provision "shell", path: "./paquetes/apt-get-debian.sh"    
+    debian.vm.provision "shell", path: "./scripts/script-debian.sh"    
     debian.vm.provision "shell", inline: $git_trincheras_docker
     debian.vm.provider "virtualbox" do |v|
       v.name = "vm-lab-docker-debian"
@@ -73,7 +73,7 @@ Vagrant.configure("2") do |config|
     for nPuerto in 50400..50420
       rocky.vm.network "forwarded_port", guest: nPuerto, host: nPuerto
     end
-    rocky.vm.provision "shell", path: "./paquetes/dnf-rocky.sh"    
+    rocky.vm.provision "shell", path: "./scripts/script-rocky.sh"    
     rocky.vm.provision "shell", inline: $git_trincheras_docker
     rocky.vm.provider "virtualbox" do |v|
       v.name = "vm-lab-docker-rocky"

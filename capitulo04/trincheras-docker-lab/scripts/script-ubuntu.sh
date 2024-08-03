@@ -27,8 +27,5 @@ apt-get install gnupg -y
 # Proporciona información sobre la distribución de Linux instalada.
 apt-get install lsb-release -y
 
-# Proporciona una visualización interactiva en tiempo real del uso del sistema, incluyendo la utilización de CPU, memoria y procesos activos.
-apt-get htop -y
-
 # Conjunto de herramientas de red como ifconfig y netstat.
 apt-get install net-tools -y
