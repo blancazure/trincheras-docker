@@ -1,0 +1,82 @@
+# Clonación del respositorio con los comandos y recursos desde GitHub
+$git_trincheras_docker = <<-SCRIPT
+  echo Clonando repositorio 'trincheras-docker' desde GitHub...
+  git clone https://github.com/blancazure/trincheras-docker.git
+SCRIPT
+
+Vagrant.configure("2") do |config|
+  # Configuración base para todas las VM
+  config.vm.provider "virtualbox" do |vb|
+    vb.check_guest_additions = false 
+    vb.memory = "2048"
+    vb.cpus = 2
+    vb.gui = false
+  end
+
+  # Establece el tiempo máximo de espera de inicio en 600s
+  config.vm.boot_timeout = 600
+
+  # Configuración de la máquina Ubuntu
+  config.vm.define "vm-lab-docker-ubuntu" do |ubuntu|
+    ubuntu.vm.box = "bento/ubuntu-24.04"
+    ubuntu.vm.box_check_update = true
+    ubuntu.vm.hostname = "vm-lab-docker-ubuntu"
+    ubuntu.vm.network "private_network", ip: "192.168.100.101"
+    for nPuerto in 50100..50120
+      ubuntu.vm.network "forwarded_port", guest: nPuerto, host: nPuerto
+    end
+    ubuntu.vm.provision "shell", path: "./paquetes/apt-get-ubuntu.sh"
+    ubuntu.vm.provision "shell", inline: $git_trincheras_docker
+    ubuntu.vm.provider "virtualbox" do |v|
+      v.name = "vm-lab-docker-ubuntu"
+    end
+  end
+
+  # Configuración de la máquina Fedora
+  config.vm.define "vm-lab-docker-fedora" do |fedora|
+    fedora.vm.box = "bento/fedora-latest"
+    fedora.vm.box_check_update = true
+    fedora.vm.hostname = "vm-lab-docker-fedora"
+    fedora.vm.network "private_network", ip: "192.168.100.102"
+    for nPuerto in 50200..50220
+      fedora.vm.network "forwarded_port", guest: nPuerto, host: nPuerto
+    end
+    fedora.vm.provision "shell", path: "./paquetes/dnf-fedora.sh"
+    fedora.vm.provision "shell", inline: $git_trincheras_docker
+    fedora.vm.provider "virtualbox" do |v|
+      v.name = "vm-lab-docker-fedora"
+    end
+  end
+
+  # Configuración de la máquina Debian
+  config.vm.define "vm-lab-docker-debian" do |debian|
+    debian.vm.box = "bento/debian-12"
+    debian.vm.box_check_update = true
+    debian.vm.hostname = "vm-lab-docker-debian"
+    debian.vm.network "private_network", ip: "192.168.100.103"
+    for nPuerto in 50300..50320
+      debian.vm.network "forwarded_port", guest: nPuerto, host: nPuerto
+    end
+    debian.vm.provision "shell", path: "./paquetes/apt-get-debian.sh"    
+    debian.vm.provision "shell", inline: $git_trincheras_docker
+    debian.vm.provider "virtualbox" do |v|
+      v.name = "vm-lab-docker-debian"
+    end
+  end
+
+  # Configuración de la máquina Rocky Linux
+  config.vm.define "vm-lab-docker-rocky" do |rocky|
+    rocky.vm.box = "bento/rockylinux-9.0"
+    rocky.vm.box_check_update = true
+    rocky.vm.hostname = "vm-lab-docker-rocky"
+    rocky.vm.network "private_network", ip: "192.168.100.104"
+    for nPuerto in 50400..50420
+      rocky.vm.network "forwarded_port", guest: nPuerto, host: nPuerto
+    end
+    rocky.vm.provision "shell", path: "./paquetes/dnf-rocky.sh"    
+    rocky.vm.provision "shell", inline: $git_trincheras_docker
+    rocky.vm.provider "virtualbox" do |v|
+      v.name = "vm-lab-docker-rocky"
+    end
+  end
+end
