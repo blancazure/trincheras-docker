@@ -1,0 +1,155 @@
+--------------------------------------------------------
+Conectar con el entorno de laboratorio
+vagrant up vm-lab-docker-ubuntu
+vagrant ssh vm-lab-docker-ubuntu
+
+--------------------------------------------------------
+Estado del entorno de laboratorio
+cd /home/vagrant/trincheras/docker/capitulo04/estructura
+tree
+
+--------------------------------------------------------
+Trabajar con el sistema de archivos.
+pwd - Print Working Directory
+pwd
+
+ls - List Directory Contents
+ls
+ls -l
+ls -a
+
+cd - Change Directory
+cd /home/vagrant/trincheras/docker/capitulo04/estructura/directorio1
+pwd
+cd ..
+pwd
+cd /
+pwd
+cd
+pwd
+cd ./trincheras/docker/capitulo04/estructura
+pwd
+
+mkdir - Make Directory
+mkdir nuevo_directorio
+ls
+
+rmdir - Remove Directory
+rmdir nuevo_directorio
+ls
+
+rm – Remove
+rm archivo-a.txt
+rm -r directorio2
+
+cp – Copy
+cp archivo-b.txt archivo-c.txt
+cp -r directorio1 directorio2
+
+mv – Move
+mv archivo-c.txt directorio3/archivo5.txt
+mv directorio2/archivo1.txt directorio2/archivo3.txt
+mv directorio2/archivo2.txt directorio2/archivo4.txt
+
+find - Search for Files
+tree
+find . -name "archivo3.txt"
+find /home/vagrant -type d -name "docker"
+
+--------------------------------------------------------
+Gestión de procesos.
+
+* Preparando el entorno.
+cd /home/vagrant/trincheras/docker/capitulo04
+ls -l
+cat ./bucle-infinito.sh
+chmod +x bucle-infinito.sh
+./bucle-infinito.sh &
+./bucle-infinito.sh &
+
+* Comandos para la gestión de procesos.
+ps
+ps aux
+ps aux | grep bucle-infinito.sh
+
+top
+
+htop
+
+ps aux | grep bucle-infinito.sh
+kill
+kill -9
+
+./bucle-infinito.sh &
+./bucle-infinito.sh &
+ps
+pkill bucle-infinito
+pkill bucle-infinito
+
+./bucle-infinito.sh &
+./bucle-infinito.sh &
+pgrep docker
+pgrep -l docker
+
+nice -n 10 ./bucle-infinito.sh &
+sudo renice -n 5 
+
+jobs
+
+Gestión de usuarios y grupos
+--------------------------------------------------------
+sudo useradd usuario1
+sudo useradd -m -d /home/home_usuario2 -s /bin/bash usuario2
+
+sudo groupadd desarrolladores
+
+sudo userdel usuario1
+sudo userdel -r usuario2
+
+sudo groupdel desarrolladores
+
+Permisos de usuarios y grupos.
+--------------------------------------------------------
+/home/vagrant/trincheras/docker/capitulo04/estructura
+
+chmod u+x archivo-b.txt
+chmod a+rwx ./directorio3
+
+sudo useradd usuario3
+sudo useradd usuario4
+sudo groupadd devops
+sudo chown usuario3 archivo-b.txt
+sudo chown -R usuario4:devops ./directorio2
+ls
+
+sudo usermod -aG devops usuario3
+sudo usermod -d /home/nuevo_home_usuario4 usuario4
+
+sudo passwd usuario3
+
+su root
+su – usuario3
+
+sudo apt-get update
+reboot
+passwd usuario4
+
+groups usuario3
+
+Edición de archivos.
+--------------------------------------------------------
+nano archivo-c.txt
+
+vim archivo-c.txt
+
+echo "Hola desde las trincheras!"
+
+echo “Texto generado con echo y guardado en el archivo” > archivo-d.txt
+
+cat archivo-c.txt
+cat archivo-c.txt archivo-d.txt > archivo_combinado.txt
+cat archivo_combinado.txt
+
+sed 's/archivo/documento/g' archivo-d.txt
+sed 's/generado/creado/g' archivo-d.txt > archivo_modificado.txt
+cat archivo_modificado.txt

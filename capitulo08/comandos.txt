@@ -1,0 +1,137 @@
+Búsqueda de imágenes en Docker Hub.
+------------------------------------------
+docker search ubuntu
+docker search --help
+docker search --filter stars=200 ubuntu
+docker search --filter is-official=true ubuntu
+docker search --filter is-official=true --filter stars=100 ubuntu
+docker search ubuntu --format "{{.Name}}: {{.Description}}"
+docker search ubuntu --limit 3
+docker search ubuntu --no-trunc --limit 2
+
+Ayuda en línea para docker image.
+------------------------------------------
+docker help image
+
+Descarga de imagenes con docker pull
+------------------------------------------
+docker pull ubuntu:20.04
+docker pull ubuntu
+docker pull --all-tags nginx
+docker pull --platform linux/arm64 alpine
+docker pull --quiet redis
+
+Crear un contenedor a partir de una imagen descargada.
+------------------------------------------
+docker pull nginx:latest
+docker run -d -p 8080:80 --name mi_nginx nginx:latest
+http://localhost:8080
+
+Listar las imágenes locales.
+------------------------------------------
+docker image ls --help
+docker image ls -a
+docker image ls --digests
+docker image ls --filter=reference=myrepo/*
+docker image ls --format "table {{.Repository}}\t{{.Tag}}\t{{.ID}}\t{{.Size}}"
+docker image ls --no-trunc
+docker image ls -q
+
+
+Tamaño de los contenedores e imágenes.
+------------------------------------------
+docker run -d --name ubuntu_tamanho ubuntu sleep 3600
+docker ps --filter "name=ubuntu_tamanho" -s
+docker exec -it ubuntu_tamanho bash
+touch /trincheras.txtexit
+echo "Docker desde las trincheras" > /trincheras.txt
+apt-get update
+apt-get install -y curl
+exit
+docker diff ubuntu_tamanho
+docker images ubuntu
+
+Crear imágenes desde contenedores.
+------------------------------------------
+docker pull ubuntu
+docker run -it --name contenedor_ubuntu ubuntu bash
+apt-get update
+apt-get install -y apache2
+apache2 -v
+exit
+docker commit --help
+docker commit contenedor_ubuntu imagen_apache
+docker images --filter "reference=imagen_apache"
+docker ps -a -s -f name=contenedor_ubuntu
+docker images ubuntu
+docker images imagen_apache
+docker commit -a "Javier Rodríguez Blanco <jblanco@blancazure.com>" -m "Instalado servidor web Apache 2.4.58" contenedor_ubuntu imagen_apache:2.4.58
+docker images imagen_apache
+docker run -it --name contenedor_apache imagen_apache:2.4.58 bash
+apache2 -v
+exit
+docker inspect --format='{{.Config.Cmd}}' imagen_apache:2.4.58
+docker inspect --format='{{.Config.Env}}' imagen_apache:2.4.58
+
+
+Consultar información de las imágenes.
+------------------------------------------
+docker inspect imagen_apache:2.4.58
+docker inspect --format='{{.Config.Cmd}}' imagen_apache:2.4.58
+docker inspect --format='{{.Config.Env}}' imagen_apache:2.4.58
+
+Historial (capas) de una imagen.
+------------------------------------------
+docker history --help
+docker history imagen_apache:2.4.58
+docker history --no-trunc -q imagen_apache:2.4.58
+
+Eliminar imágenes.
+------------------------------------------
+docker image rm --help
+docker rmi imagen_apache:2.4.58
+docker rmi -f imagen_apache:2.4.58
+docker images -f "dangling=true"
+docker rmi $(docker images -f "dangling=true" -q)
+
+Exportar imágenes.
+------------------------------------------
+docker run -it --name contenedor_alpine alpine /bin/sh
+apk update
+apk add lighttpd
+mkdir -p /var/www/localhost/htdocs
+echo "Hola desde alpine" > /var/www/localhost/htdocs/index.html
+lighttpd -f /etc/lighttpd/lighttpd.conf
+exit
+docker commit contenedor_alpine imagen_alpine_hola:1
+docker save -o imagen_alpine_hola.tar imagen_alpine_hola:1
+
+Importar imágenes.
+------------------------------------------
+cd trincheras-docker-lab
+vagrant up vm-lab-docker-centos
+
+Eliminar imágenes no utilizadas.
+------------------------------------------
+docker image prune --help
+docker image prune
+docker image prune -a
+docker image prune -f
+docker image prune --filter "until=24h"
+
+
+
+
+IMAGE          CREATED          CREATED BY               SIZE    COMMENT
+9269a7ce9b87   13 minutes ago   bash                     146MB   Instalado. . .
+35a88802559d   7 weeks ago      /bin/sh -c #(nop)        0B
+<missing>      7 weeks ago      /bin/sh -c #(nop). . .   78.1MB
+<missing>      7 weeks ago      /bin/sh -c #(nop). . .   0B
+<missing>      7 weeks ago      /bin/sh -c #(nop). . .   0B
+<missing>      7 weeks ago      /bin/sh -c #(nop)        0B
+<missing>      7 weeks ago      /bin/sh -c #(nop)        0B
+
+
+NAME                 DESCRIPTION                                                            
+ubuntu               Ubuntu is a Debian-based Linux operating system based on free software.
+ubuntu-debootstrap   DEPRECATED; use "ubuntu" instead                                       

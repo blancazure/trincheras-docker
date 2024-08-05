@@ -1,0 +1,34 @@
+Crear una cuenta en Docker Hub.
+--------------------------------------------
+https://hub.docker.com/
+trincheras_docker
+Guardar imágenes utilizdas en los ejemplos del libro ‘Docker desde las trincheras’
+
+Conectarse a Docker Hub desde Docker CLI.
+--------------------------------------------
+docker login
+cat ~/.docker/config.json
+
+Subir imágenes a Docker Hub
+--------------------------------------------
+docker run -it --name contenedor_hola_docker_hub amd64/alpine /bin/sh
+echo 'echo "Hola desde Docker Hub"' > /usr/local/bin/hola-docker-hub
+chmod +x /usr/local/bin/hola-docker-hub
+/usr/local/bin/hola-docker-hub
+exit
+docker commit contenedor_hola_docker_hub hola-docker-hub
+docker tag hola-docker-hub blancazure/hola-docker-hub:1.0.0
+docker push blancazure/hola-docker-hub:1.0.0	
+docker images | grep blancazure
+docker search blancazure
+https://hub.docker.com/
+docker push --help
+docker tag hola-docker-hub blancazure/hola-docker-hub:1.0.1
+docker tag hola-docker-hub blancazure/hola-docker-hub:1.0.2
+docker tag hola-docker-hub blancazure/hola-docker-hub:2.0
+docker push -a blancazure/hola-docker-hub
+docker tag hola-docker-hub blancazure/hola-docker-hub:no-trust
+docker push --disable-content-trust blancazure/hola-docker-hub:no-trust
+docker tag hola-docker-hub blancazure/hola-docker-hub:beta
+docker push --quiet blancazure/hola-docker-hub:beta
+

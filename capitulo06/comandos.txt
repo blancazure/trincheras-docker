@@ -1,0 +1,226 @@
+--------------------------------
+Instalación Ubuntu.
+
+cd trincheras-docker-lab
+vagrant up vm-lab-docker-ubuntu
+vagrant ssh vm-lab-docker-ubuntu
+sudo apt-get update
+sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install \
+    docker-ce \
+    docker-ce-cli \
+    containerd.io \
+    docker-buildx-plugin \
+    docker-compose-plugin
+docker --version
+sudo docker run hello-world
+exit
+vagrant snapshot save vm-lab-docker-ubuntu estado-1-docker-limpio
+
+--------------------------------
+Instalación Fedora.
+
+cd trincheras-docker-lab
+vagrant up vm-lab-docker-fedora
+vagrant ssh vm-lab-docker-fedora
+sudo dnf update -y
+sudo dnf -y install dnf-plugins-core
+sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -aG docker $USER
+docker --version
+sudo docker run hello-world
+exit
+vagrant snapshot save vm-lab-docker-fedora estado-1-docker-limpio
+
+--------------------------------
+Instalación Debian.
+
+cd trincheras-docker-lab
+vagrant up vm-lab-docker-debian
+vagrant ssh vm-lab-docker-debian
+sudo apt-get update
+sudo apt-get install \
+  apt-transport-https \
+  ca-certificates \
+  curl \
+  gnupg \
+  lsb-release
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install \
+  docker-ce \
+  docker-ce-cli \
+  containerd.io \
+  docker-buildx-plugin \
+  docker-compose-plugin
+docker --version
+sudo docker run hello-world
+exit
+vagrant snapshot save vm-lab-docker-debian estado-1-docker-limpio
+
+--------------------------------
+Instalación CentOS
+
+cd trincheras-docker-lab
+vagrant up vm-lab-docker-centos
+vagrant ssh vm-lab-docker-centos
+sudo yum update -y
+sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo yum install -y \
+  docker-ce \
+  docker-ce-cli \
+  containerd.io \
+  docker-buildx-plugin \
+  docker-compose-plugin
+sudo systemctl start docker
+sudo systemctl enable docker
+docker --version
+sudo docker run hello-world
+exit
+vagrant snapshot save vm-lab-docker-centos estado-1-docker-limpio
+
+Resolución de problemas en instalaciones Linux.
+--------------------------------
+sudo journalctl -u docker
+sudo systemctl restart docker
+sudo usermod -aG docker $USER
+docker --version
+sudo nano /etc/docker/daemon.json
+sudo systemctl restart docker
+sudo systemctl status docker
+sudo apt-get update
+sudo apt-get upgrade docker-ce
+
+Estado del laboratorio de pruebas.  
+--------------------------------
+vagrant snapshot list
+chmod u+x *.sh
+ls -l
+./restaurar-ubuntu.sh
+./restaurar-todas.sh
+
+Pasos para habilitar WSL2 en Windows
+--------------------------------
+wsl --install
+wsl --list --online 
+wsl --install -d Ubuntu-20.04
+wsl --install -d Debian
+cd .\Windows\System32\
+wsl ls -l
+cd \
+wsl --list –verbose
+wsl --set-version Ubuntu-20.04 1
+wsl --set-default Debian
+wsl –shutdown
+mkdir c:\backups_wsl
+wsl --export Ubuntu-20.04 C:\backups_wsl\ubuntu-20.04.tar
+mkdir C:\WSL
+mkdir C:\WSL\Ubuntu
+wsl --import Ubuntu-20.04-Import C:\WSL\Ubuntu C:\backups\ubuntu-20.04.tar
+wsl --terminate Ubuntu-20.04
+wsl -d Ubuntu-20.04
+
+Instalar Docker Desktop (Windows).
+--------------------------------
+docker version
+
+Instalar Docker Desktop (MacOS).
+--------------------------------
+docker --version
+sudo docker run hello-world
+
+Script de instalación para Ubuntu.
+--------------------------------
+#!/bin/bash
+
+# Actualizar la lista de paquetes
+sudo apt-get update
+
+# Instalar paquetes necesarios
+sudo apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    software-properties-common
+
+# Añadir la clave GPG oficial de Docker
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+# Añadir el repositorio de Docker
+sudo add-apt-repository \
+    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+    $(lsb_release -cs) \
+    stable"
+
+# Actualizar la lista de paquetes con el repositorio de Docker
+sudo apt-get update
+
+# Instalar Docker
+sudo apt-get install -y docker-ce
+
+# Verificar la instalación
+sudo systemctl status docker
+
+# Añadir el usuario actual al grupo docker
+sudo usermod -aG docker $USER
+
+# Mensaje final
+echo "Docker se ha instalado correctamente en Ubuntu."
+echo "Cierra y vuelve a abrir tu sesión para aplicar los cambios de grupo."
+
+
+chmod +x install_docker_ubuntu.sh
+./install_docker_ubuntu.sh
+
+Script de instalación para CentOS.
+--------------------------------
+#!/bin/bash
+
+# Actualizar la lista de paquetes
+sudo yum update -y
+
+# Instalar paquetes necesarios
+sudo yum install -y yum-utils \
+  device-mapper-persistent-data \
+  lvm2
+
+# Añadir el repositorio de Docker
+sudo yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
+
+# Instalar Docker
+sudo yum install -y docker-ce
+
+# Iniciar Docker
+sudo systemctl start docker
+
+# Habilitar Docker para que inicie al arrancar el sistema
+sudo systemctl enable docker
+
+# Verificar la instalación
+sudo systemctl status docker
+
+# Añadir el usuario actual al grupo docker
+sudo usermod -aG docker $USER
+
+# Mensaje final
+echo "Docker se ha instalado correctamente en CentOS."
+echo "Cierra y vuelve a abrir tu sesión para aplicar los cambios de grupo."
+
+
+chmod +x install_docker_centos.sh
+./install_docker_centos.sh

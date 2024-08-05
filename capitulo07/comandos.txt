@@ -1,0 +1,291 @@
+Puesta a punto del entorno de laboratorio
+-------------------------------------------------------
+cd trincheras-docker-lab
+./restaurar-ubuntu.sh
+vagrant ssh vm-lab-docker-ubuntu
+docker run hello-world
+docker run --name contenedor-nginx -d -p 80:80 nginx
+docker run --name contenedor-redis -d redis
+
+
+Obtener ayuda sobre los comandos y opciones.
+-------------------------------------------------------
+docker help container
+docker container ls --help
+
+Explorando el comando docker container ls.
+-------------------------------------------------------
+docker container list
+docker container ls
+docker container ps
+docker ps
+docker ps -a
+docker container ls -a
+docker ps -q	
+docker container list -q -a
+
+Otras opciones de los comandos.
+-------------------------------------------------------
+docker container ls -n 2
+docker container ls -l
+docker container ls --no-trunc
+docker container ls -s
+
+Utilización de filtros con la opción --filter.
+-------------------------------------------------------
+docker ps --filter "status=running"	
+docker ps --filter "status=exited"		
+docker ps --filter "name=nginx"
+docker ps --filter "label=env=produccion"
+docker ps --filter "network=mi-red"
+docker ps --filter "id=0385243aa451"
+docker ps --filter "volume=mi-volumen"
+docker ps \
+    --filter "status=running" \
+    --filter "network=mi-red" \
+    --filter "label=env=produccion"
+
+Formatear la salida de manera personalizada.
+-------------------------------------------------------
+docker ps --format "table {{.ID}}\t{{.Names}}\t{{.Status}}"
+docker ps --format "table {{.ID}}\t{{.Image}}\t{{.Ports}}"
+docker ps --format "table {{.ID}}\t{{.CreatedAt}}\t{{.Command}}"
+docker ps --format "{{json .}}" -l
+
+Ejemplo: docker run -i -t ubuntu /bin/bash
+-------------------------------------------------------
+docker run --name ubuntu-bash -i -t ubuntu /bin/bash
+
+Ejemplo avanzado: ejecutando una aplicación web.
+-------------------------------------------------------
+docker run -d -p 8081:80 --name mi-nginx nginx
+
+Comandos para explorar el contenedor.
+-------------------------------------------------------
+docker start ubuntu-bash
+docker attach ubuntu-bash
+cd trincheras-docker-lab
+vagrant ssh vm-lab-docker-ubuntu
+hostname
+cat /etc/hosts
+uname -a
+cat /etc/os-release
+ps aux
+exit
+docker ps -a
+
+Asignando nombres a los contenedores.
+-------------------------------------------------------
+docker run --name ubuntu-terminal -i -t ubuntu /bin/bash
+docker rename ubuntu-terminal ubuntu-consola
+docker ps -a -f id=?
+
+Iniciar y acceder a los contenedores.
+-------------------------------------------------------
+docker start ubuntu-bash
+docker ps -a –filter “name=bash”
+docker attach ubuntu-bash
+
+Ayuda y opciones del comando docker start
+-------------------------------------------------------
+docker start --help
+docker start -a ubuntu-bash
+docker start --detach-keys="ctrl-d" ubuntu-bash
+docker start -i ubuntu-bash
+
+Ayuda y opciones del comando docker attach.
+-------------------------------------------------------
+docker attach --help
+docker start ubuntu-bash
+docker attach --detach-keys="ctrl-d" ubuntu-bash
+docker start mi-nginx
+docker attach --no-stdin mi-nginx
+docker start ubuntu-consola
+docker attach --sig-proxy=false ubuntu-consola
+
+Sesión interactiva.
+-------------------------------------------------------
+docker start ubuntu-bash
+docker exec -it ubuntu-bash /bin/bash
+uname -a
+exit
+
+Ejecución directa.
+-------------------------------------------------------
+docker start ubuntu-bash
+docker exec -it ubuntu-bash uname -a
+docker run -it ubuntu bash -c "uname -a"
+
+Usar docker exec con opciones adicionales.
+-------------------------------------------------------
+docker exec –help
+docker exec -d ubuntu-bash touch /tmp/archivo-prueba
+docker exec --detach-keys="ctrl-x" ubuntu-bash sh
+docker exec -e MI_VARIABLE=valor ubuntu-bash env
+cd /home/vagrant/trincheras/docker/capitulo06/archivos
+cat ./env.list
+docker exec --env-file ./env.list ubuntu-bash printenv
+docker exec --privileged ubuntu-bash mount -t tmpfs tmpfs /mnt
+docker exec -u nobody ubuntu-bash whoami
+docker exec -w /tmp ubuntu-bash ls
+
+Creación de contenedores como servicios.
+-------------------------------------------------------
+docker run --name test-daemon -d ubuntu /bin/bash -c "while true; do echo Docker desde las trincheras; sleep 1; done"
+docker ps
+
+Ejemplos de aplicaciones en contenedores como servicios.
+-------------------------------------------------------
+docker run --name nginx-servicio-8083 -d -p 80:8083 nginx
+docker run --name mysql-servicio-8084 -d -e MYSQL_ROOT_PASSWORD=clave_root_bbdd -p 3306:8084 mysql
+
+Consultar la salida de los contenedores (logs).
+-------------------------------------------------------
+docker container logs --help
+docker logs test-daemon
+docker logs -f test-daemon
+docker logs --tail 10 test-daemon
+docker logs -t test-daemon
+docker logs --since 10m test-daemon
+docker logs --since 2024-07-11T08:40:00 --until 2024-07-11T08:50:00 test-daemon
+docker logs --details test-daemon
+
+Procesos en los contenedores.
+-------------------------------------------------------
+docker top test-daemon
+docker top test-daemon -aux
+docker top test-daemon -aux | grep echo
+
+Copiado de archivos y carpetas
+-------------------------------------------------------
+echo “Pruebas con docker container cp” > miarchivo.txt
+docker cp miarchivo.txt ubuntu-bash:/root/
+docker exec ubuntu-bash ls /root/
+mkdir micarpeta
+echo "Contenido de prueba" > micarpeta/prueba.txt
+docker cp micarpeta ubuntu-bash:/root/
+docker exec ubuntu-bash ls -l /root/
+docker exec ubuntu-bash bash -c "echo 'Log de prueba' > /root/log.txt"
+docker cp ubuntu-bash:/root/log.txt .
+ls -l
+docker exec ubuntu-bash bash -c "mkdir /root/micarpeta2"
+docker exec ubuntu-bash bash -c "echo 'Otro contenido de prueba' > /root/micarpeta2/otro_prueba.txt"
+docker cp ubuntu-bash:/root/micarpeta2 .
+ls -l
+mkdir micarpeta_con_metadatos
+echo "Contenido importante" > micarpeta_con_metadatos/archivo_metadatos.txt
+ls -l micarpeta_con_metadatos/
+touch -m -d "2022-01-01 12:00:00" micarpeta_con_metadatos/archivo_metadatos.txt
+ls -l micarpeta_con_metadatos/
+docker cp -a micarpeta_con_metadatos ubuntu-bash:/root/
+docker exec ubuntu-bash ls -l /root/micarpeta_con_metadatos/
+
+Variables de entorno en los contenedores
+-------------------------------------------------------
+docker run --name mysql-01 -e MYSQL_ROOT_PASSWORD=mi_clave_root -d mysql:latest
+MYSQL_ROOT_PASSWORD=mi_clave_root
+MYSQL_DATABASE=mi_base_de_datos
+MYSQL_USER=usuario
+MYSQL_PASSWORD=mi_clave_usuario
+cd /home/vagrant/trincheras/docker/capitulo06/archivos
+$ docker run --name mysql-02 --env-file variables.dev -d mysql:latest
+
+Detener contenedores en ejecución.
+-------------------------------------------------------
+docker stop test-daemon
+docker start test-daemon
+docker stop -t 30 test-daemon
+docker kill test-daemon
+
+Consultar información de los contenedores.
+-------------------------------------------------------
+docker inspect test-daemon
+docker inspect --format='{{.State.Running}}' test-daemon
+docker inspect --format='Ejecutando: {{.State.Running}}' test-daemon
+docker inspect --format='Ejecutando: {{.State.Running}} - Nombre: {{.Name}}' test-daemon
+docker start nginx-servicio-8083
+docker inspect --format='{{ .NetworkSettings.IPAddress }}' nginx-servicio-8083
+
+Eliminar contenedores
+-------------------------------------------------------
+docker start test-daemon
+docker rm test-daemon
+docker rm -f test-daemon
+docker rm $(docker ps -a -q --filter "name=contenedor")
+
+
+
+
+
+
+
+
+CONTAINER ID   IMAGE     COMMAND                  STATUS          NAMES
+0385243aa451   redis     "docker-entrypoint.s…"   Up 13 minutes   contenedor-redis
+c441ce02f12d   nginx     "/docker-entrypoint.…"   Up 14 minutes   contenedor-nginx
+
+CONTAINER ID   IMAGE         COMMAND                  NAMES
+956821f7f769   ubuntu        "/bin/bash"              ubuntu-terminal
+9d8359a9127b   ubuntu        "/bin/bash"              ubuntu-bash
+86fc02ca81cf   nginx         "/docker-entrypoint.…"   mi-nginx
+0385243aa451   redis         "docker-entrypoint.s…"   contenedor-redis
+c441ce02f12d   nginx         "/docker-entrypoint.…"   contenedor-nginx
+f1f9b5501813   hello-world   "/hello"                 crazy_williamson
+ce0101ff0f6c   hello-world   "/hello"                 distracted_gould
+
+
+
+CONTAINER ID   IMAGE   COMMAND                  STATUS            NAMES
+0385243aa451   redis   "docker-entrypoint.s…"   Up About an hour  contenedor-redis
+
+CONTAINER ID                                                      NAMES
+0385243aa4512a8ac53365db79795314bf14642533e4714ad253656fc6ff5ad6  contenedor-redis
+c441ce02f12d2b0f6e44380149fb69531f6d0f1c5f84bdb63c8c380fe0da0761  contenedor-nginx
+
+CONTAINER ID   IMAGE    COMMAND                 STATUS            NAMES
+0385243aa451   redis    "docker-entrypoint.s…"  Up 6 hours        contenedor-redis
+c441ce02f12d   nginx    "/docker-entrypoint.…"  Up 6 hours   cp   contenedor-nginx
+
+f1f9b5501813   hello-world   "/hello"   6 hours ago    Exited (0) 6 hours ago              crazy_williamson
+ce0101ff0f6c   hello-world   "/hello"   30 hours ago   Exited (0) 30 hours ago             distracted_gould
+
+CONTAINER ID   IMAGE         COMMAND    STATUS                    NAMES
+f1f9b5501813   hello-world   "/hello"   Exited (0) 6 hours ago    crazy_williamson
+ce0101ff0f6c   hello-world   "/hello"   Exited (0) 30 hours ago   distracted_gould
+
+CONTAINER ID   IMAGE   STATUS       NAMES              SIZE
+0385243aa451   redis   Up 6 hours   contenedor-redis   0B (virtual 116MB)
+c441ce02f12d   nginx   Up 6 hours   contenedor-nginx   1.09kB (virtual 188MB)
+
+
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root       1  0.0  0.6  22564 13444 ?      Ss   03:03   0:02 /sbin/init autoinstall
+root       2  0.0  0.0      0     0 ?      S    03:03   0:00 [kthreadd]
+root       3  0.0  0.0      0     0 ?      S    03:03   0:00 [pool_workqueue_release]
+. . .
+root     732  0.0  2.3 1801300 47556 ?     Ssl  03:03   0:01 /usr/bin/containerd
+root     940  0.0  4.0 2438236 81764 ?     Ssl  03:03   0:05 /usr/bin/dockerd -H. . .
+vagrant 1914  0.0  0.2   7736  4352 pts/0  Ss   03:09   0:00 -bash
+root    3475  0.0  1.3 1773140 27076 pts/1 Sl+  06:00   0:00 docker attach ubuntu-bash
+vagrant 3497  0.0  0.2  10884  4480 pts/2  R+   06:09   0:00 ps aux
+
+
+CONTAINER ID   IMAGE         COMMAND                  NAMES
+9d8359a9127b   ubuntu        "/bin/bash"              ubuntu-bash
+86fc02ca81cf   nginx         "/docker-entrypoint.…"   mi-nginx
+0385243aa451   redis         "docker-entrypoint.s…"   contenedor-redis
+c441ce02f12d   nginx         "/docker-entrypoint.…"   contenedor-nginx
+f1f9b5501813   hello-world   "/hello"                 crazy_williamson
+ce0101ff0f6c   hello-world   "/hello"                 distracted_gould
+
+CONTAINER ID  IMAGE   COMMAND                  STATUS             NAMES
+f5857d316711  ubuntu  "/bin/bash -c 'while…"   Up About a minute  test-daemon
+9d8359a9127b  ubuntu  "/bin/bash"              Up 14 hours        ubuntu-bash
+
+UID   PID   PPID  C  STIME  TTY  TIME      CMD
+root  3722  3700  0  21:00  ?    00:00:00  /bin/bash -c while true; do. . .
+root  5695  3722  0  21:36  ?    00:00:00  sleep 1
+
+USER  PID    %CPU  %MEM  VSZ   RSS   TTY  STAT  START  TIME  COMMAND
+root  3722   0.0   0.1   4324  3200  ?    Ss    05:08  0:09  /bin/bash -c while true; do echo Docker desde las trincheras; sleep 1; done
+root  27473  0.0   0.0   2696  1280  ?    S     14:16  0:00  sleep 1
