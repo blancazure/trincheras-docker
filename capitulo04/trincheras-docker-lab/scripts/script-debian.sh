@@ -29,3 +29,6 @@ apt-get install lsb-release -y
 
 # Conjunto de herramientas de red como ifconfig y netstat.
 apt-get install net-tools -y
+
+# Sistema de control de versiones distribuido
+apt-get install git -y
