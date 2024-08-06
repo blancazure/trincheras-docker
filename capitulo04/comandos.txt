@@ -11,7 +11,6 @@ git clone https://github.com/blancazure/trincheras-docker.git
 ## Instalación de VirtualBox en distintos sistemas operativos.
 ### Instalación de VirtualBox en Ubuntu / Debian.
 
-
 sudo apt update
 curl https://www.virtualbox.org/download/oracle_vbox_2016.asc | gpg --dearmor > oracle_vbox_2016.gpg
 curl https://www.virtualbox.org/download/oracle_vbox.asc | gpg --dearmor > oracle_vbox.gpg
@@ -30,8 +29,9 @@ sudo dnf install wget curl gcc make perl bzip2 dkms kernel-devel kernel-headers 
 rpm -q kernel-devel 
 uname -r
 sudo dnf update -y
+sudo reboot now
 sudo wget http://download.virtualbox.org/virtualbox/rpm/fedora/virtualbox.repo -P /etc/yum.repos.d/
-sudo rpm --import https://www.virtualbox.org/download/oracle_vbox.asc
+sudo rpm --import https://www.virtualbox.org/download/oracle_vbox_2016.asc
 dnf search virtualbox
 sudo dnf install VirtualBox-7.0 -y
 sudo /sbin/vboxconfig
@@ -66,12 +66,12 @@ https://www.virtualbox.org/wiki/Downloads
 Instalación de Vagrant en Ubuntu / Debian.
 --------------------------------------------------------
 sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get upgrade -y
 sudo apt-get install -y curl
 curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+sudo apt add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 sudo apt-get update
-sudo apt-get install vagrant
+sudo apt-get install vagrant -y
 vagrant --versión
 
 Instalación de Vagrant en Fedora.

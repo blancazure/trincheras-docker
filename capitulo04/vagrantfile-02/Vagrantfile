@@ -1,6 +1,6 @@
 Vagrant.configure("2") do |config|
   # Definir una caja base (una imagen de sistema operativo)
-  config.vm.box = "bento/ubuntu-24.04"
+  config.vm.box = "ubuntu/focal64"
 
   # Configurar la máquina virtual
   config.vm.define "ubuntu3" do |ubuntu3|
