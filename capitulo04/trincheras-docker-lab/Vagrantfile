@@ -2,7 +2,9 @@
 $git_trincheras_docker = <<-SCRIPT
   echo Clonando repositorio 'trincheras-docker' desde GitHub...
   git clone https://github.com/blancazure/trincheras-docker.git
+  mkdir /home/vagrant/trincheras-docker/capitulo05/estructura/.directorio-oculto
   chown -R vagrant:vagrant trincheras-docker
+
 SCRIPT
 
 Vagrant.configure("2") do |config|
