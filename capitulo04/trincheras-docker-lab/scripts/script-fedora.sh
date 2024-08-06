@@ -2,30 +2,30 @@
 
 # Actualiza la lista de paquetes disponibles y sus versiones
 dnf update -y
-      
-# Muestra la estructura de directorios y archivos en forma de árbol.
+
+# Instala la herramienta 'tree' para mostrar la estructura de directorios y archivos en forma de árbol
 dnf install tree -y
 
-# Un editor de texto simple y fácil de usar en la terminal.
+# Instala el editor de texto 'nano', que es simple y fácil de usar en la terminal
 dnf install nano -y
 
-# Una herramienta para transferir datos desde o hacia un servidor.
+# Instala la herramienta 'curl' para transferir datos desde o hacia un servidor
 dnf install curl -y
 
-# Permite que APT use el protocolo HTTPS para descargar paquetes y sus dependencias.
+# Instala 'apt-transport-https' para permitir que APT use el protocolo HTTPS para descargar paquetes y sus dependencias
 dnf install apt-transport-https -y
 
-# Proporciona certificados de autoridades de certificación para permitir conexiones seguras HTTPS.
+# Instala 'ca-certificates' que proporciona certificados de autoridades de certificación para permitir conexiones seguras HTTPS
 dnf install ca-certificates -y
 
-#  Herramienta para cifrar y firmar datos y comunicaciones, también utilizada para verificar la autenticidad de los paquetes.
+# Instala 'gnupg', una herramienta para cifrar y firmar datos y comunicaciones, también utilizada para verificar la autenticidad de los paquetes
 dnf install gnupg -y
 
-# Proporciona información sobre la distribución de Linux instalada.
+# Instala 'lsb-release' que proporciona información sobre la distribución de Linux instalada
 dnf install lsb-release -y
 
-# Conjunto de herramientas de red como ifconfig y netstat.
+# Instala 'net-tools', un conjunto de herramientas de red como ifconfig y netstat
 dnf install net-tools -y
 
-# Sistema de control de versiones distribuido
+# Instala 'git', un sistema de control de versiones distribuido
 dnf install git -y

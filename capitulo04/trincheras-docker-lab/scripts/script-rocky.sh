@@ -3,23 +3,23 @@
 # Actualiza la lista de paquetes disponibles y sus versiones
 dnf update -y
       
-# Muestra la estructura de directorios y archivos en forma de árbol.
+# Instala la herramienta 'tree' para mostrar la estructura de directorios y archivos en forma de árbol
 dnf install tree -y
 
-# Un editor de texto simple y fácil de usar en la terminal.
+# Instala el editor de texto 'nano', simple y fácil de usar en la terminal
 dnf install nano -y
 
-# Una herramienta para transferir datos desde o hacia un servidor.
+# Instala 'curl', una herramienta para transferir datos desde o hacia un servidor
 dnf install curl -y
 
-# Proporciona certificados de autoridades de certificación para permitir conexiones seguras HTTPS.
+# Instala los certificados de autoridades de certificación para permitir conexiones seguras HTTPS
 dnf install ca-certificates -y
 
-#  Herramienta para cifrar y firmar datos y comunicaciones, también utilizada para verificar la autenticidad de los paquetes.
+# Instala 'gnupg', una herramienta para cifrar y firmar datos y comunicaciones, también utilizada para verificar la autenticidad de los paquetes
 dnf install gnupg -y
 
-# Conjunto de herramientas de red como ifconfig y netstat.
+# Instala el conjunto de herramientas de red 'net-tools', que incluye utilidades como ifconfig y netstat
 dnf install net-tools -y
 
-# Sistema de control de versiones distribuido
+# Instala 'git', un sistema de control de versiones distribuido
 dnf install git -y
