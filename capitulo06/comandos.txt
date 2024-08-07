@@ -1,33 +1,24 @@
+Instalación de Docker en Ubuntu.
 --------------------------------
-Instalación Ubuntu.
-
 cd trincheras-docker-lab
 vagrant up vm-lab-docker-ubuntu
 vagrant ssh vm-lab-docker-ubuntu
 sudo apt-get update
-sudo apt-get install \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg \
-    lsb-release
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg  
 echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt-get update
-sudo apt-get install \
-    docker-ce \
-    docker-ce-cli \
-    containerd.io \
-    docker-buildx-plugin \
-    docker-compose-plugin
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 docker --version
-sudo docker run hello-world
+sudo usermod -aG docker $USER
+exit
+vagrant ssh vm-lab-docker-ubuntu
+docker run hello-world
 exit
 vagrant snapshot save vm-lab-docker-ubuntu estado-1-docker-limpio
 
+Instalación de Docker en Fedora.
 --------------------------------
-Instalación Fedora.
-
 cd trincheras-docker-lab
 vagrant up vm-lab-docker-fedora
 vagrant ssh vm-lab-docker-fedora
@@ -38,61 +29,51 @@ sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin dock
 sudo systemctl start docker
 sudo systemctl enable docker
 sudo usermod -aG docker $USER
+exit
+vagrant ssh vm-lab-docker-fedora
 docker --version
-sudo docker run hello-world
+docker run hello-world
 exit
 vagrant snapshot save vm-lab-docker-fedora estado-1-docker-limpio
 
+Instalación de Docker en Debian.
 --------------------------------
-Instalación Debian.
-
 cd trincheras-docker-lab
 vagrant up vm-lab-docker-debian
 vagrant ssh vm-lab-docker-debian
 sudo apt-get update
-sudo apt-get install \
-  apt-transport-https \
-  ca-certificates \
-  curl \
-  gnupg \
-  lsb-release
+sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt-get update
-sudo apt-get install \
-  docker-ce \
-  docker-ce-cli \
-  containerd.io \
-  docker-buildx-plugin \
-  docker-compose-plugin
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo usermod -aG docker $USER
+exit
+vagrant ssh vm-lab-docker-debian
 docker --version
-sudo docker run hello-world
+docker run hello-world
 exit
 vagrant snapshot save vm-lab-docker-debian estado-1-docker-limpio
 
+Instalación de Docker en Rocky Linux.
 --------------------------------
-Instalación CentOS
-
 cd trincheras-docker-lab
-vagrant up vm-lab-docker-centos
-vagrant ssh vm-lab-docker-centos
-sudo yum update -y
-sudo yum install -y yum-utils device-mapper-persistent-data lvm2
-sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-sudo yum install -y \
-  docker-ce \
-  docker-ce-cli \
-  containerd.io \
-  docker-buildx-plugin \
-  docker-compose-plugin
+vagrant up vm-lab-docker-rocky
+vagrant ssh vm-lab-docker-rocky
+sudo dnf check-update
+sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo 
+sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 sudo systemctl start docker
 sudo systemctl enable docker
-docker --version
-sudo docker run hello-world
+sudo usermod -aG docker $USER
 exit
-vagrant snapshot save vm-lab-docker-centos estado-1-docker-limpio
+vagrant ssh vm-lab-docker-rocky
+docker --version
+docker run hello-world
+exit
+vagrant snapshot save vm-lab-docker-rocky estado-1-docker-limpio
 
-Resolución de problemas en instalaciones Linux.
+Resolución de problemas en instalaciones de Docker en Linux.
 --------------------------------
 sudo journalctl -u docker
 sudo systemctl restart docker
@@ -104,13 +85,14 @@ sudo systemctl status docker
 sudo apt-get update
 sudo apt-get upgrade docker-ce
 
-Estado del laboratorio de pruebas.  
+Estado del laboratorio de pruebas: Preparación y configuración completa.    
 --------------------------------
 vagrant snapshot list
 chmod u+x *.sh
-ls -l
+ls -l *.sh
 ./restaurar-ubuntu.sh
 ./restaurar-todas.sh
+./restaurar.sh
 
 Pasos para habilitar WSL2 en Windows
 --------------------------------
@@ -133,94 +115,27 @@ wsl --import Ubuntu-20.04-Import C:\WSL\Ubuntu C:\backups\ubuntu-20.04.tar
 wsl --terminate Ubuntu-20.04
 wsl -d Ubuntu-20.04
 
-Instalar Docker Desktop (Windows).
+Instalación de Docker Desktop en Windows.
 --------------------------------
+https://www.docker.com/products/docker-desktop
 docker version
 
 Instalar Docker Desktop (MacOS).
 --------------------------------
+https://www.docker.com/products/docker-desktop
 docker --version
 sudo docker run hello-world
 
 Script de instalación para Ubuntu.
 --------------------------------
-#!/bin/bash
-
-# Actualizar la lista de paquetes
-sudo apt-get update
-
-# Instalar paquetes necesarios
-sudo apt-get install -y \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    software-properties-common
-
-# Añadir la clave GPG oficial de Docker
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-
-# Añadir el repositorio de Docker
-sudo add-apt-repository \
-    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-    $(lsb_release -cs) \
-    stable"
-
-# Actualizar la lista de paquetes con el repositorio de Docker
-sudo apt-get update
-
-# Instalar Docker
-sudo apt-get install -y docker-ce
-
-# Verificar la instalación
-sudo systemctl status docker
-
-# Añadir el usuario actual al grupo docker
-sudo usermod -aG docker $USER
-
-# Mensaje final
-echo "Docker se ha instalado correctamente en Ubuntu."
-echo "Cierra y vuelve a abrir tu sesión para aplicar los cambios de grupo."
 
 
 chmod +x install_docker_ubuntu.sh
 ./install_docker_ubuntu.sh
 
-Script de instalación para CentOS.
+Script de instalación para Fedora.
 --------------------------------
-#!/bin/bash
-
-# Actualizar la lista de paquetes
-sudo yum update -y
-
-# Instalar paquetes necesarios
-sudo yum install -y yum-utils \
-  device-mapper-persistent-data \
-  lvm2
-
-# Añadir el repositorio de Docker
-sudo yum-config-manager \
-    --add-repo \
-    https://download.docker.com/linux/centos/docker-ce.repo
-
-# Instalar Docker
-sudo yum install -y docker-ce
-
-# Iniciar Docker
-sudo systemctl start docker
-
-# Habilitar Docker para que inicie al arrancar el sistema
-sudo systemctl enable docker
-
-# Verificar la instalación
-sudo systemctl status docker
-
-# Añadir el usuario actual al grupo docker
-sudo usermod -aG docker $USER
-
-# Mensaje final
-echo "Docker se ha instalado correctamente en CentOS."
-echo "Cierra y vuelve a abrir tu sesión para aplicar los cambios de grupo."
 
 
-chmod +x install_docker_centos.sh
-./install_docker_centos.sh
+chmod +x install_docker_fedora.sh
+./install_docker_fedora.sh
