@@ -1,4 +1,4 @@
-Búsqueda de imágenes en Docker Hub.
+Búsqueda de imágenes en Docker Hub: Encuentra lo que necesitas fácilmente.
 ------------------------------------------
 docker search ubuntu
 docker search --help
@@ -13,19 +13,19 @@ Ayuda en línea para docker image.
 ------------------------------------------
 docker help image
 
-Descarga de imagenes con docker pull
+Descargar imágenes con docker pull: Trae tus aplicaciones a cualquier entorno.
 ------------------------------------------
+docker pull --help
 docker pull ubuntu:20.04
 docker pull ubuntu
-docker pull --all-tags nginx
+docker pull --all-tags busybox
 docker pull --platform linux/arm64 alpine
-docker pull --quiet redis
+docker pull --quiet nginx:alpine
 
 Crear un contenedor a partir de una imagen descargada.
 ------------------------------------------
-docker pull nginx:latest
-docker run -d -p 8080:80 --name mi_nginx nginx:latest
-http://localhost:8080
+docker pull python
+docker run --rm python:latest python -c "print('Hola desde Python')"
 
 Listar las imágenes locales.
 ------------------------------------------
@@ -135,3 +135,17 @@ IMAGE          CREATED          CREATED BY               SIZE    COMMENT
 NAME                 DESCRIPTION                                                            
 ubuntu               Ubuntu is a Debian-based Linux operating system based on free software.
 ubuntu-debootstrap   DEPRECATED; use "ubuntu" instead                                       
+
+
+REPOSITORY   TAG      DIGEST                                           IMAGE ID    
+python       latest   sha256:e8be0ea148390d08bc077840cf8738d80b0e...   c7ed3a18aaaa
+alpine       latest   sha256:0a4eaa0eecf5f8c050e5bba433f5be7587ee...   0b4426ad4bf2
+nginx        alpine   sha256:208b70eefac13ee9be00e486f79c5cef861c...   1ae23480369f
+ubuntu       latest   sha256:2e863c44b718727c860746568e1d13b2fa71...   35a88802559d
+ubuntu       20.04    sha256:0b897358ff6624825fb50d20ffb6eaea77ce...   5f5250218d28
+busybox      1-musl   sha256:ede585a46e84850ffa6e3331c53ae71d9b1b...   615b080b9dbe
+busybox      1        sha256:25e9fcbd3799fce9c0ec978303d38a6ffb1f...   65ad0d468eb1
+busybox      1        sha256:9ae97d36d26566ff84e8893c64a68ca6d114...   65ad0d468eb1
+busybox      1-glibc  sha256:25e9fcbd3799fce9c0ec978303d38a6ffb1f...   65ad0d468eb1
+busybox      1-glibc  sha256:9ae97d36d26566ff84e8893c64a68ca6d114...   65ad0d468eb1
+hello-world  latest   sha256:1408fec50309afee38f3535383f59e6dc092...   d2c94e258dcb
