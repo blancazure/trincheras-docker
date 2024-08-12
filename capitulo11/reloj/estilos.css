@@ -1,0 +1,34 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #1d2b64 0%, #f8cdda 100%);
+    color: white;
+}
+
+.contenedor-reloj {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#hora {
+    font-size: 4rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+#fecha {
+    font-size: 1.5rem;
+    margin-top: 10px;
+}
+
+.digito {
+    display: inline-block;
+    transition: transform 0.5s ease-in-out;
+}
