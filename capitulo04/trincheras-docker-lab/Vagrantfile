@@ -1,4 +1,4 @@
-# Clonación del respositorio con los comandos y recursos desde GitHub
+# Clonación del repositorio con los comandos y recursos desde GitHub
 $git_trincheras_docker = <<-SCRIPT
   echo Clonando repositorio 'trincheras-docker' desde GitHub...
   git clone https://github.com/blancazure/trincheras-docker.git
@@ -9,76 +9,52 @@ SCRIPT
 Vagrant.configure("2") do |config|
   # Configuración base para todas las VM
   config.vm.provider "virtualbox" do |vb|
-    vb.check_guest_additions = false 
+    vb.check_guest_additions = false     
     vb.memory = "2048"
     vb.cpus = 2
     vb.gui = false
   end
 
   # Establece el tiempo máximo de espera de inicio en 600s
-  config.vm.boot_timeout = 600
+  config.vm.boot_timeout = 600  
 
-  # Configuración de la máquina Ubuntu
-  config.vm.define "vm-lab-docker-ubuntu" do |ubuntu|
-    ubuntu.vm.box = "blancazure/box-lab-docker-ubuntu"
-    ubuntu.vm.box_check_update = true
-    ubuntu.vm.hostname = "vm-lab-docker-ubuntu"
-    ubuntu.vm.network "private_network", ip: "192.168.100.101"
-    for nPuerto in 50100..50120
-      ubuntu.vm.network "forwarded_port", guest: nPuerto, host: nPuerto
-    end
-    ubuntu.vm.provision "shell", path: "./scripts/script-ubuntu.sh"
-    ubuntu.vm.provision "shell", inline: $git_trincheras_docker
-    ubuntu.vm.provider "virtualbox" do |v|
-      v.name = "vm-lab-docker-ubuntu"
-    end
-  end
+  # Desactivar la instalación y actualización de las Guest Additions
+  config.vbguest.auto_update = false
+  config.vbguest.no_install = true    
 
-  # Configuración de la máquina Fedora
-  config.vm.define "vm-lab-docker-fedora" do |fedora|
-    fedora.vm.box = "blancazure/box-lab-docker-fedora"
-    fedora.vm.box_check_update = true
-    fedora.vm.hostname = "vm-lab-docker-fedora"
-    fedora.vm.network "private_network", ip: "192.168.100.102"
-    for nPuerto in 50200..50220
-      fedora.vm.network "forwarded_port", guest: nPuerto, host: nPuerto
-    end
-    fedora.vm.provision "shell", path: "./scripts/script-fedora.sh"
-    fedora.vm.provision "shell", inline: $git_trincheras_docker
-    fedora.vm.provider "virtualbox" do |v|
-      v.name = "vm-lab-docker-fedora"
-    end
-  end
+  # Se desactivan las carpetas compartidas, no se van a utilizar
+  config.vm.synced_folder ".", "/vagrant", disabled: true      
 
-  # Configuración de la máquina Debian
-  config.vm.define "vm-lab-docker-debian" do |debian|
-    debian.vm.box = "blancazure/box-lab-docker-debian"
-    debian.vm.box_check_update = true
-    debian.vm.hostname = "vm-lab-docker-debian"
-    debian.vm.network "private_network", ip: "192.168.100.103"
-    for nPuerto in 50300..50320
-      debian.vm.network "forwarded_port", guest: nPuerto, host: nPuerto
-    end
-    debian.vm.provision "shell", path: "./scripts/script-debian.sh"    
-    debian.vm.provision "shell", inline: $git_trincheras_docker
-    debian.vm.provider "virtualbox" do |v|
-      v.name = "vm-lab-docker-debian"
-    end
-  end
+  # Definición de las máquinas
+  machines = [
+    {name: "ubuntu", ip: "192.168.100.101", ports: 50100..50120, script: "script-ubuntu.sh"},
+    {name: "fedora", ip: "192.168.100.102", ports: 50200..50220, script: "script-fedora.sh"},
+    {name: "debian", ip: "192.168.100.103", ports: 50300..50320, script: "script-debian.sh"},
+    {name: "rocky",  ip: "192.168.100.104", ports: 50400..50420, script: "script-rocky.sh"}
+  ]
 
-  # Configuración de la máquina Rocky Linux
-  config.vm.define "vm-lab-docker-rocky" do |rocky|
-    rocky.vm.box = "blancazure/box-lab-docker-rocky"
-    rocky.vm.box_check_update = true
-    rocky.vm.hostname = "vm-lab-docker-rocky"
-    rocky.vm.network "private_network", ip: "192.168.100.104"
-    for nPuerto in 50400..50420
-      rocky.vm.network "forwarded_port", guest: nPuerto, host: nPuerto
-    end
-    rocky.vm.provision "shell", path: "./scripts/script-rocky.sh"    
-    rocky.vm.provision "shell", inline: $git_trincheras_docker
-    rocky.vm.provider "virtualbox" do |v|
-      v.name = "vm-lab-docker-rocky"
+  # Configuración de cada máquina utilizando un bucle
+  machines.each do |machine|
+    config.vm.define "vm-lab-docker-#{machine[:name]}" do |vm_config|
+      vm_config.vm.box = "blancazure/box-lab-docker-#{machine[:name]}"
+      vm_config.vm.box_check_update = true
+      vm_config.vm.hostname = "vm-lab-docker-#{machine[:name]}"
+      vm_config.vm.network "private_network", ip: machine[:ip]
+
+      machine[:ports].each do |port|
+        vm_config.vm.network "forwarded_port", guest: port, host: port
+      end
+
+      vm_config.vm.provision "shell", path: "./scripts/#{machine[:script]}"
+      vm_config.vm.provision "shell", inline: $git_trincheras_docker
+
+      vm_config.vm.provider "virtualbox" do |v|
+        v.name = "vm-lab-docker-#{machine[:name]}"
+      end
+
+      vm_config.vm.post_up_message = <<-MESSAGE
+        ¡#{machine[:name].capitalize} en marcha! 🐳 La máquina 'vm-lab-docker-#{machine[:name]}' ha sido desplegada correctamente.
+      MESSAGE
     end
   end
 end

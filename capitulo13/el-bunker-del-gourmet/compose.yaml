@@ -1,0 +1,102 @@
+version: '3.8'
+
+name: el-bunker-del-gourmet
+
+services:
+  bunker_mysql:
+    image: blancazure/mysql:8.0
+    container_name: bunker_mysql_db
+    networks:
+      - backend
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    secrets:
+      - mysql_root_password
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+
+  bunker-api-go:
+    image: blancazure/golang:1.20
+    container_name: bunker_api_go
+    build:
+      context: ./golang-api
+      dockerfile: Dockerfile
+    networks:
+      - backend
+      - frontend
+    ports:
+      - "50301:8080"
+    environment:
+      - DB_HOST=bunker_mysql_db
+      - DB_PORT=3306
+      - DB_NAME=${MYSQL_DATABASE}
+      - DB_USER_FILE=/run/secrets/mysql_user
+      - DB_PASSWORD_FILE=/run/secrets/mysql_password
+    secrets:
+      - mysql_user
+      - mysql_password
+    depends_on:
+      bunker_mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: on-failure
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  bunker-front-node:
+    image: blancazure/node:18-alpine
+    container_name: bunker_front_node
+    build:
+      context: ./node-app
+      dockerfile: Dockerfile
+    networks:
+      - frontend
+    environment:
+      - API_URL=http://bunker-api-go:50301
+    ports:
+      - "50300:3000"
+    depends_on:
+      - bunker-api-go
+    env_file:
+      - .env
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+
+volumes:
+  db_data:
+    driver: local
+
+secrets:
+  mysql_root_password:
+    file: ./secrets/mysql_root_password.txt
+  mysql_user:
+    file: ./secrets/mysql_user.txt
+  mysql_password:
+    file: ./secrets/mysql_password.txt

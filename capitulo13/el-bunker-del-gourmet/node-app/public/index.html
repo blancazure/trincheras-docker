@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Bunker del Gourmet</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <div class="encabezado">
+        <div class="logo-nombre">
+            <img src="img/logo.png" alt="Logo El Bunker del Gourmet" class="logo">
+            <h1>El Bunker del Gourmet</h1>
+        </div>
+        <div class="buscador">
+            <input type="text" id="campoBusqueda" placeholder="Buscar recetas...">
+            <button id="botonBuscar">Buscar</button>
+        </div>
+    </div>
+    <div id="contenedorResultados" class="contenedor-resultados">
+        <div id="resultados" class="resultados"></div>
+    </div>
+
+    <!-- Ventana Modal -->
+    <div id="modalReceta" class="modal-receta">
+        <div class="modal-content">
+            <span id="cerrarModal" class="cerrar-modal">&times;</span>
+            <div class="modal-body">
+                <img id="modalImagen" src="" alt="Imagen Receta">
+                <div class="modal-detalle">
+                    <h2 id="modalNombre"></h2>
+                    <p id="modalDescripcion"></p>
+                    <p><strong>Tiempo de preparación:</strong> <span id="modalTiempo"></span></p>
+                    <p><strong>Dificultad:</strong> <span id="modalDificultad"></span></p>
+                </div>
+            </div>
+            <div class="modal-ingredientes">
+                <h3>Ingredientes:</h3>
+                <ul id="modalIngredientes"></ul>
+            </div>
+            <div class="modal-preparacion-container">
+                <div class="preparacion-header">
+                    <h3>Preparación:</h3>
+                    <div class="tts-controles">
+                        <button id="ttsPlay">▶️</button>
+                        <button id="ttsPause">⏸️</button>
+                    </div>
+                </div>
+                <div class="modal-preparacion" id="modalPreparacion"></div>
+            </div>
+        </div>
+    </div>    
+
+    <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,432 @@
+/* Importar la fuente desde Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Estilos generales */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #1D3B51;
+    margin: 0;
+    padding: 0;
+    color: #ffffff;
+    overflow: hidden; /* Evitar scroll en toda la página */
+}
+
+.encabezado {
+    background-color: #24536D;
+    color: #ffffff;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000; /* Aseguramos que el panel de búsqueda esté por encima */
+    display: flex;
+    justify-content: center; /* Centrar el contenido */
+    align-items: center;
+    flex-direction: column; /* Asegura que el contenido se mantenga bien alineado en pantallas pequeñas */
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+}
+
+.logo-nombre {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px; /* Margen inferior para separar del buscador */
+}
+
+.logo {
+    width: 70px;
+    height: 70px;
+    margin-right: 15px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+h1 {
+    margin: 0;
+    font-size: 28px;
+    color: #ffffff; /* Color del nombre de la página en blanco */
+}
+
+.buscador {
+    display: flex;
+    justify-content: center;
+    width: 90%; /* Ancho del 90% */
+    max-width: 1200px; /* Máximo ancho */
+    margin: 0 20px; /* Márgenes laterales */
+}
+
+#campoBusqueda {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #1DCBF2;
+    border-radius: 4px 0 0 4px;
+    background-color: #24536D;
+    color: #ffffff;
+    outline: none;
+    transition: border-color 0.3s ease;
+    margin-right: 10px; /* Añadir un margen derecho */
+}
+
+#campoBusqueda:focus {
+    border-color: #79e0f7;
+}
+
+#botonBuscar {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #ffffff; /* Botón de búsqueda en blanco */
+    color: #1D3B51;
+    border: 2px solid #ffffff; /* Borde en blanco */
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    margin-left: -2px; /* Evitar espacio entre el campo de búsqueda y el botón */
+}
+
+#botonBuscar:hover {
+    background-color: #f0f0f0; /* Un tono más claro al pasar el cursor */
+    border-color: #f0f0f0;
+}
+
+/* Estilos para el mensaje de no resultados */
+.no-resultados {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #24536D;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    margin-top: 50px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.no-resultados img {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 20px;
+    opacity: 0.8;
+}
+
+.no-resultados h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #1DCBF2;
+    text-align: center;
+}
+
+.no-resultados p {
+    font-size: 16px;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 20px;
+    max-width: 400px;
+}
+
+#botonExplorar {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #1DCBF2;
+    color: #1D3B51;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#botonExplorar:hover {
+    background-color: #79e0f7;
+}
+
+/* Estilos de la ventana modal */
+.modal-receta {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro */
+    animation: fadeIn 0.5s ease; /* Animación de aparición */
+}
+
+/* Contenido de la ventana modal */
+.modal-content {
+    background-color: #1D3B51;
+    margin: 15% auto; /* Centrando el modal */
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 800px;
+    animation: slideIn 0.5s ease; /* Animación de aparición del contenido */
+}
+
+/* Botón de cierre del modal */
+.cerrar-modal {
+    color: #ffffff;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.cerrar-modal:hover,
+.cerrar-modal:focus {
+    color: #cccccc;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Estructura de la ventana modal */
+.modal-body {
+    display: flex;
+    align-items: flex-start;
+}
+
+.modal-body img {
+    width: 150px;
+    height: 150px;
+    border-radius: 8px;
+    margin-right: 20px;
+}
+
+.modal-detalle {
+    flex: 1;
+    color: #ffffff;
+}
+
+.modal-detalle h2 {
+    margin-top: 0;
+    font-size: 24px;
+    color: #1DCBF2;
+}
+
+.modal-detalle p {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+.modal-ingredientes,
+.modal-preparacion {
+    margin-top: 20px;
+}
+
+.modal-ingredientes h3,
+.modal-preparacion h3 {
+    color: #1DCBF2;
+    margin-bottom: 10px;
+}
+
+.modal-ingredientes ul {
+    list-style-type: disc;
+    margin-left: 20px;
+    color: #ffffff;
+}
+
+/* Contenedor general para la sección de preparación */
+.modal-preparacion-container {
+    margin-top: 20px;
+}
+
+/* Encabezado de la sección de preparación */
+.preparacion-header {
+    display: flex;
+    justify-content: space-between; /* Alinea el texto de Preparación a la izquierda y los botones a la derecha */
+    align-items: center;
+    margin-bottom: 10px; /* Espacio entre el encabezado y el cuadro de preparación */
+}
+
+/* Estilo para el título de la sección de preparación */
+.preparacion-header h3 {
+    color: #1DCBF2;
+    margin: 0;
+}
+
+/* Botones de control multimedia */
+.tts-controles {
+    display: flex;
+    align-items: center;
+}
+
+.tts-controles button {
+    background-color: #1DCBF2;
+    color: #ffffff;
+    border: none;
+    width: 40px; /* Tamaño cuadrado */
+    height: 40px; /* Tamaño cuadrado */
+    font-size: 16px; /* Tamaño del icono */
+    border-radius: 8px; /* Bordes redondeados */
+    cursor: pointer;
+    margin-left: 10px; /* Espacio entre los botones */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra sutil para darle profundidad */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tts-controles button:hover {
+    background-color: #17a2b8; /* Un poco más oscuro al pasar el ratón por encima */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada en hover */
+}
+
+.tts-controles button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(29, 203, 242, 0.5); /* Resplandor de enfoque */
+}
+
+.tts-controles button:active {
+    background-color: #138496; /* Más oscuro al hacer clic */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra menos pronunciada al hacer clic */
+}
+
+/* Recuadro con scroll para la preparación */
+.modal-preparacion {
+    max-height: 200px; /* Limita la altura para que no expanda la ventana modal */
+    overflow-y: auto; /* Scroll vertical */
+    background-color: #24536D; /* Color de fondo del recuadro */
+    padding: 10px;
+    border-radius: 8px;
+    color: #ffffff; /* Color del texto de la preparación */
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+}
+
+/* Ajuste del panel de resultados */
+.contenedor-resultados {
+    margin-top: 160px; /* Aseguramos que los resultados no se superpongan con el panel de búsqueda */
+    padding: 20px;
+    height: calc(100vh - 180px); /* Asegura que solo los resultados tengan scroll */
+    overflow-y: auto; /* Scroll solo en los resultados */
+    background-color: #1D3B51;
+    z-index: 500; /* Panel de resultados por debajo del panel de búsqueda */
+}
+
+.resultados {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.resultados .receta {
+    background-color: #24536D;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    margin-top: 20px; /* Espacio superior para separar del primer resultado */
+    width: 100%;
+    max-width: 800px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: #ffffff;
+}
+
+.resultados .receta:first-child {
+    margin-top: 40px; /* Asegura el espacio extra para el primer resultado */
+}
+
+.resultados .receta:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.resultados .receta img {
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    margin-right: 20px;
+    object-fit: cover;
+}
+
+.resultados .receta .detalle-receta {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.resultados .receta h2 {
+    margin: 0 0 10px 0;
+    font-size: 22px;
+    color: #ffffff; /* Nombre de la receta en blanco */
+}
+
+.resultados .receta .descripcion,
+.resultados .receta .ingredientes {
+    font-size: 16px;
+    color: #e0e0e0;
+    margin-bottom: 10px;
+}
+
+.resultados .receta .info-receta {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 14px;
+    color: #e0e0e0;
+    display: flex;
+    align-items: center;
+}
+
+.resultados .receta .info-receta span {
+    margin: 0 5px;
+}
+
+.icono-dificultad.media::before {
+    content: "🟠";
+}
+
+.icono-dificultad.facil::before {
+    content: "🟢";
+}
+
+.icono-dificultad.dificil::before {
+    content: "🔴";
+}
